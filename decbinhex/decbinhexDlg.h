@@ -4,6 +4,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include "afxcmn.h"
 
 
 // CdecbinhexDlg dialog
@@ -45,4 +46,5 @@ public:
 	 
 	afx_msg void OnLbnSelchangeList1();
 	CListBox showList;
+	CListCtrl stringList;
 };

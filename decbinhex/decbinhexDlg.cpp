@@ -66,7 +66,8 @@ void CdecbinhexDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT4, binary);
 	DDX_Text(pDX, IDC_EDIT3, integer);
 
-	DDX_Control(pDX, IDC_LIST1, showList);
+	
+	DDX_Control(pDX, IDC_LIST2, stringList);
 }
 
 BEGIN_MESSAGE_MAP(CdecbinhexDlg, CDialogEx)
@@ -111,6 +112,10 @@ BOOL CdecbinhexDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	stringList.InsertColumn(0, _T("BINARY"), 1, 200);
+	stringList.InsertColumn(1, _T("INTEGER"), 1, 200);
+	stringList.InsertColumn(2, _T("HEXADECIMAL"), 1, 200);
+
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -222,10 +227,17 @@ BOOL CdecbinhexDlg::PreTranslateMessage(MSG* pMsg)
 		if (pMsg->wParam == VK_INSERT) {
 
 			UpdateData(true);
+			if (integer == 0) { 
+				binary = "0";
+				hexadecimal = "0";
+			}
 			CString separator(_T("--->"));
 			CString integerConverted(_T(""));
 			integerConverted.Format(_T("%d"), integer);
-			showList.AddString(binary + separator + integerConverted+ _T("--->")+hexadecimal);
+			stringList.InsertItem(0,binary);
+			stringList.InsertItem(0,integerConverted);
+			stringList.InsertItem(0,hexadecimal);
+			
 			//binary = _T("Pressed enter key");
 			UpdateData(false);
 
