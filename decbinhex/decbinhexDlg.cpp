@@ -7,6 +7,8 @@
 #include "decbinhexDlg.h"
 #include "afxdialogex.h"
 #include <string.h>
+#include <cstring>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -68,6 +70,7 @@ void CdecbinhexDlg::DoDataExchange(CDataExchange* pDX)
 
 	
 	DDX_Control(pDX, IDC_LIST2, stringList);
+	DDV_MinMaxInt(pDX, integer, -5555, INT_MAX);
 }
 
 BEGIN_MESSAGE_MAP(CdecbinhexDlg, CDialogEx)
@@ -77,6 +80,11 @@ BEGIN_MESSAGE_MAP(CdecbinhexDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT3, &CdecbinhexDlg::OnEnChangeEdit3)
 	
 	ON_LBN_SELCHANGE(IDC_LIST1, &CdecbinhexDlg::OnLbnSelchangeList1)
+	ON_EN_CHANGE(IDC_EDIT4, &CdecbinhexDlg::OnEnChangeEdit4)
+	ON_BN_CLICKED(IDC_BUTTON2, &CdecbinhexDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON1, &CdecbinhexDlg::OnBnClickedButton1)
+	ON_EN_CHANGE(IDC_EDIT5, &CdecbinhexDlg::OnEnChangeEdit5)
+	ON_EN_CHANGE(IDC_EDIT1, &CdecbinhexDlg::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 
@@ -112,9 +120,10 @@ BOOL CdecbinhexDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	stringList.InsertColumn(0, _T("BINARY"), 1, 200);
-	stringList.InsertColumn(1, _T("INTEGER"), 1, 200);
-	stringList.InsertColumn(2, _T("HEXADECIMAL"), 1, 200);
+	stringList.InsertColumn(0, _T("BIN"), 1, 300);
+	stringList.InsertColumn(1, _T("DEZ (signed)"), 1, 100);
+	stringList.InsertColumn(2, _T("DEZ (unsigned)"), 1, 100);
+	stringList.InsertColumn(3, _T("HEX"), 1, 100);
 
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -169,79 +178,33 @@ HCURSOR CdecbinhexDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-CString CdecbinhexDlg::convertToHex(int number) {
-	CString converted, temp;
-	converted = "";
-	while (number > 0) {
-		switch (number % 16) {
-		case 10:
-			temp = "A";
-			break;
-		case 11:
-			temp = "B";
-			break;
-		case 12:
-			temp = "C";
-			break;
-		case 13:
-			temp = "D";
-			break;
-		case 14:
-			temp = "E";
-			break;
-		case 15:
-			temp = "F";
-			break;
-		default:
-			temp.Format(_T("%d"),number%16);
-			break;
-		}
-		number = number / 16;
-		converted = converted + temp;
-
-	}
-	return converted.MakeReverse();
-
-};
-
-CString CdecbinhexDlg::convertToBin(int number) {
-	CString converted,temp;
-	converted = "";
-	while (number > 0) {
-		int bin = number % 2;
-		number = number / 2;
-		temp.Format(_T("%d"), bin);
-		converted = converted+temp;
-	}
-	return converted.MakeReverse();
 
 
-};
 
 BOOL CdecbinhexDlg::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if ((pMsg->wParam == VK_RETURN) || (pMsg->wParam == VK_ESCAPE)) 
+		if ((pMsg->wParam == VK_RETURN)) 
 			pMsg->wParam = VK_INSERT;
 		if (pMsg->wParam == VK_INSERT) {
-
+			unsigned int Unint;
 			UpdateData(true);
 			if (integer == 0) { 
 				binary = "0";
 				hexadecimal = "0";
 			}
-			CString separator(_T("--->"));
+			Unint =4294967295;
 			CString integerConverted(_T(""));
+			CString unsignedIntConverted(_T(""));
 			integerConverted.Format(_T("%d"), integer);
-			stringList.InsertItem(0,binary);
-			stringList.InsertItem(0,integerConverted);
-			stringList.InsertItem(0,hexadecimal);
-			
-			//binary = _T("Pressed enter key");
+			unsignedIntConverted.Format(_T("%u"), integer);
+			int currentItem;
+			currentItem = stringList.InsertItem(0,binary);
+			stringList.SetItemText(currentItem,1,integerConverted);
+			stringList.SetItemText(currentItem, 2, unsignedIntConverted);
+			stringList.SetItemText(currentItem,3,hexadecimal);
 			UpdateData(false);
-
-
 		}
 		
 			
@@ -253,17 +216,56 @@ void CdecbinhexDlg::OnEnChangeEdit3()
 {
 	UpdateData(true);
 	if (integer != 0) {
-		binary = convertToBin(integer);
-		hexadecimal = convertToHex(integer);
+		binary = numberConverter.toBin(integer);
+		hexadecimal = numberConverter.toHex(integer);
 	}
-	
 	UpdateData(false);
 }
-
-
 
 
 void CdecbinhexDlg::OnLbnSelchangeList1()
 {
 	// TODO: Add your control notification handler code here
+}
+
+
+void CdecbinhexDlg::OnEnChangeEdit4()
+{
+	UpdateData(true);
+	integer = numberConverter.fromBin(binary);
+	hexadecimal = numberConverter.toHex(integer);
+	UpdateData(false);
+}
+
+
+
+void CdecbinhexDlg::OnBnClickedButton2()
+{
+	delete(this);
+}
+
+
+void CdecbinhexDlg::OnBnClickedButton1()
+{
+	stringList.DeleteAllItems();
+}
+
+
+void CdecbinhexDlg::OnEnChangeEdit5()
+{
+	UpdateData(true);
+	integer = numberConverter.fromHex(hexadecimal);
+	binary = numberConverter.toBin(integer);
+	UpdateData(false);
+}
+
+
+void CdecbinhexDlg::OnEnChangeEdit1()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
 }

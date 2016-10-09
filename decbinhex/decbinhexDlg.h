@@ -5,7 +5,7 @@
 #pragma once
 #include "afxwin.h"
 #include "afxcmn.h"
-
+#include "number.h"
 
 // CdecbinhexDlg dialog
 class CdecbinhexDlg : public CDialogEx
@@ -41,10 +41,14 @@ public:
 	int integer;
 	
 	afx_msg void OnEnChangeEdit3();
-	CString convertToHex(int number);
-	CString convertToBin(int number);
-	 
+	CString convertToHex(unsigned int number);
+	Number numberConverter;
 	afx_msg void OnLbnSelchangeList1();
 	CListBox showList;
 	CListCtrl stringList;
+	afx_msg void OnEnChangeEdit4();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnEnChangeEdit5();
+	afx_msg void OnEnChangeEdit1();
 };
