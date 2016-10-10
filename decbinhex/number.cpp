@@ -83,9 +83,9 @@ BOOL Number::validateBin(std::string value) {
 }
 
 
-int Number::fromBin(CString value) {
+unsigned int Number::fromBin(CString value) {
 	value.MakeReverse();
-	int resultNumber = 0;
+	unsigned int resultNumber = 0;
 	CT2CA pszConvertedAnsiString(value);
 	std::string tempString(pszConvertedAnsiString);
 	if (validateBin(tempString)) {
@@ -110,9 +110,9 @@ BOOL Number::ValidateHex(std::string value) {
 }
 
 
-int Number::fromHex(CString value) {
+unsigned int Number::fromHex(CString value) {
 	value.MakeReverse();
-	int resultNumber=0;
+	unsigned int resultNumber=0;
 	CT2CA pszConvertedAnsiString(value);
 	std::string tempString(pszConvertedAnsiString);
 	
@@ -146,10 +146,7 @@ int Number::fromHex(CString value) {
 			default:
 				resultNumber += ((int)tempString[i]-48) * pow(16, i);
 			}
-
-
-
-			
+	
 		}
 		
 	}	

@@ -7,8 +7,8 @@ public:
 	Number();
 	CString toBin(unsigned int value);
 	CString toHex(unsigned int value);
-	int fromBin(CString value);
-	int fromHex(CString value);
+	unsigned int fromBin(CString value);
+	unsigned int fromHex(CString value);
 private:
 	BOOL validateBin(std::string value);
 	BOOL ValidateHex(std::string value);
