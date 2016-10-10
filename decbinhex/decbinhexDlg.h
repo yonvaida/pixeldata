@@ -39,9 +39,7 @@ public:
 	CString hexadecimal;
 	CString binary;
 	int integer;
-	
 	afx_msg void OnEnChangeEdit3();
-	CString convertToHex(unsigned int number);
 	Number numberConverter;
 	afx_msg void OnLbnSelchangeList1();
 	CListBox showList;
@@ -51,4 +49,5 @@ public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnEnChangeEdit5();
 	afx_msg void OnEnChangeEdit1();
+	
 };

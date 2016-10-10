@@ -194,16 +194,16 @@ BOOL CdecbinhexDlg::PreTranslateMessage(MSG* pMsg)
 				binary = "0";
 				hexadecimal = "0";
 			}
-			Unint =4294967295;
+			Unint = (unsigned int)integer;
 			CString integerConverted(_T(""));
 			CString unsignedIntConverted(_T(""));
 			integerConverted.Format(_T("%d"), integer);
 			unsignedIntConverted.Format(_T("%u"), integer);
 			int currentItem;
-			currentItem = stringList.InsertItem(0,binary);
+			currentItem = stringList.InsertItem(0,numberConverter.toBin(Unint));
 			stringList.SetItemText(currentItem,1,integerConverted);
 			stringList.SetItemText(currentItem, 2, unsignedIntConverted);
-			stringList.SetItemText(currentItem,3,hexadecimal);
+			stringList.SetItemText(currentItem,3,numberConverter.toHex(Unint));
 			UpdateData(false);
 		}
 		
@@ -225,12 +225,12 @@ void CdecbinhexDlg::OnEnChangeEdit3()
 
 void CdecbinhexDlg::OnLbnSelchangeList1()
 {
-	// TODO: Add your control notification handler code here
-}
+};
 
 
 void CdecbinhexDlg::OnEnChangeEdit4()
 {
+	
 	UpdateData(true);
 	integer = numberConverter.fromBin(binary);
 	hexadecimal = numberConverter.toHex(integer);

@@ -7,6 +7,10 @@
 
 Number::Number() {
 };
+std::string Number::toString(CString value) {
+	CT2CA pszConvertedAnsiString(value);
+	return pszConvertedAnsiString;
+}
 
 CString Number::toBin(unsigned int value){
 	CString converted, temp;
@@ -86,14 +90,11 @@ BOOL Number::validateBin(std::string value) {
 unsigned int Number::fromBin(CString value) {
 	value.MakeReverse();
 	unsigned int resultNumber = 0;
-	CT2CA pszConvertedAnsiString(value);
-	std::string tempString(pszConvertedAnsiString);
+	auto tempString = toString(value);
 	if (validateBin(tempString)) {
 		for (size_t i = 0; i < tempString.length(); i++) {
 			resultNumber += ((int)tempString[i] - 48)*pow(2, i);
 		}
-	
-	
 	}
 	return resultNumber;
 }
@@ -113,9 +114,7 @@ BOOL Number::ValidateHex(std::string value) {
 unsigned int Number::fromHex(CString value) {
 	value.MakeReverse();
 	unsigned int resultNumber=0;
-	CT2CA pszConvertedAnsiString(value);
-	std::string tempString(pszConvertedAnsiString);
-	
+	auto tempString = toString(value);
 	if (ValidateHex(tempString)) {
 		for (size_t i = 0; i < tempString.length(); i++) {
 			switch (tempString[i]) {
@@ -146,9 +145,31 @@ unsigned int Number::fromHex(CString value) {
 			default:
 				resultNumber += ((int)tempString[i]-48) * pow(16, i);
 			}
-	
 		}
-		
 	}	
 	return resultNumber;
+}
+CString Number::formatString(CString value) {
+	auto position = 1;
+	value.MakeReverse();
+	CString returnedString, oneSpace;
+	returnedString = _T("");
+	oneSpace = _T(" ");
+	for (size_t i = 0; i < value.GetLength(); i++) {
+		switch (position) {
+		case 4:
+			returnedString += value[i]+oneSpace;
+			position=1;
+			break;
+		case 8:
+			returnedString += value[i]+ oneSpace+ oneSpace;
+			position=1;
+			break;
+		default:
+			returnedString += value[i];
+			position++;
+		}
+	}
+	
+	return returnedString.MakeReverse();
 }
